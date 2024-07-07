@@ -1,0 +1,297 @@
+{% extends "core/base.html" %} {% load static %} {% load has_group %}
+{% block nombre %}Registros{% endblock nombre %} 
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="container-fluid">
+      <h2 class="text-center">Nuevo Registro</h2>
+      <form action="{% url "nuevo" %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="operador" class="col-sm-2 col-form-label">Operador:</label>
+          <div class="col-auto">
+            <input
+              type="text"
+              readonly
+              class="form-control-plaintext"
+              id="operador"
+              value="{{ user.username }}"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-5">
+            <label for="combustible" class="form-label">Combustible</label>
+            <select
+              class="form-select form-select-sm"
+              name="combustible"
+              id="combustible"
+            >
+              <option selected>Selecciona uno</option>
+            {% for comb in tipo_combustibles %}
+            {% if request.user|has_group:comb.zona_produccion %}
+            <option value="{{ comb.codigo_combustible }}">{{ comb.nombre_combustible}}</option>
+            {% endif %}
+            
+            {% endfor %}
+
+            </select>
+          </div>
+
+          <div class="col-5">
+            <label for="litros" class="form-label">Litros</label>
+            <input
+              type="number"
+              class="form-control"
+              name="litros"
+              id="litros"
+              aria-describedby="helpLitros"
+              placeholder="1"
+            />
+            <small id="helpLitros" class="form-text text-muted"
+              >Digite cantidad litros</small
+            >
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-5">
+            <label for="Fecha" class="form-label">Fecha</label>
+            <input
+              type="date"
+              class="form-control"
+              name="Fecha"
+              id="Fecha"
+              aria-describedby="helpFecha"
+              placeholder="DD/MM/AAAA"
+              value="{% now "Y-m-d" %}"
+            />
+            <small id="helpFecha" class="form-text text-muted"
+              >Fecha actual</small
+            >
+          </div>
+          <div class="col-5">
+            <label for="hora" class="form-label">Hora</label>
+            <input
+              type="time"
+              class="form-control"
+              name="hora"
+              id="hora"
+              aria-describedby="helpHora"
+              placeholder="12:34"
+              value="{% now "H:i" %}"
+            />
+            <small id="helpHora" class="form-text text-muted"
+              >Hora actual</small
+            >
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-auto">
+            <label for="turno" class="form-label">Turno</label>
+            <select class="form-select form-select-sm" name="turno" id="turno">
+              <option selected>Selecciona uno</option>
+              <option value="AM">Mañana</option>
+              <option value="PM">Tarde</option>
+              <option value="MM">Noche</option>
+            </select>
+          </div>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Enviar</button>
+      </form>
+    </div>
+  </div>
+  
+  <div class="col-md-8">
+    <h2>Listado de registros</h2>
+    <form action="" method="get">
+      <div class="row">
+          <div class="col-md-8">
+              <select class="form-select" id="filtrar" name="filtrar" aria-label="Default select example">
+                  <option selected value="1">Todo</option>
+                  <option value="0">Solo mis registros</option>
+              </select>
+          </div>
+          <div class="col-md-2">
+              <button
+              type="submit"
+              class="btn btn-primary"
+              >
+              Filtrar
+          </button>
+      </div>
+      </div>
+  </form>
+  <br>
+    <div class="container-fluid">
+      <div class="table-responsive">
+        <table
+          class="table table-striped-columns table-hover table-bordered align-middle"
+        >
+          <thead class="table-light">
+            <caption>
+              Registros
+            </caption>
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Operador</th>
+              <th>Gasolina</th>
+              <th>Litros</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% for registro in registros %}
+            <tr>
+                <td scope="row">{{registro.fecha_produccion}}</td>
+                <td>{{registro.hora_registro}}</td>
+                <td>{{registro.operador}}</td>
+                <td>{{registro.codigo_combustible}}</td>
+                <td>{{registro.litros_producidos}}</td>
+                <td> 
+                    {% if request.user.username == registro.operador %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Propuesta{{registro.id}}">
+                        Editar
+                    </button>
+                    
+
+                    <div class="modal fade" id="Propuesta{{registro.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Nueva Propuesta</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="container-fluid">
+                                <form action="{% url "editar" %}" method="GET">
+                                    <div class="mb-3">
+                                        <label for="" class="form-label">ID</label>
+                                        <input
+                                            type="hidden"
+                                            class="form-control"
+                                            name="id"
+                                            id="id"
+                                            aria-describedby="helpId"
+                                            value="{{registro.id}}"
+                                        />
+                                        <small id="helpId" class="form-text text-muted">Help text</small>
+                                    </div>
+                                    
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                      <label for="operador" class="col-sm-2 col-form-label">Operador:</label>
+                                      <div class="col-auto">
+                                        <input
+                                          type="text"
+                                          readonly
+                                          class="form-control-plaintext"
+                                          id="operador"
+                                          value="{{ registro.operador }}"
+                                        />
+                                      </div>
+                                    </div>
+                            
+                                    <div class="row">
+                                      <div class="col-5">
+                                        <label for="combustible" class="form-label">Combustible</label>
+                                        <select
+                                          class="form-select form-select-sm"
+                                          name="combustible"
+                                          id="combustible"
+                                        >
+                                          <option>Selecciona uno</option>
+                                        {% for comb in tipo_combustibles %}
+                                        {% if request.user|has_group:comb.zona_produccion %}
+                                        <option value="{{ comb.codigo_combustible }}"
+                                        {% if registro.codigo_combustible|has_code:comb.codigo_combustible %}
+                                            selected 
+                                        {% endif %}
+                                        >{{ comb.nombre_combustible}}</option>
+                                        {% endif %}
+                                        
+                                        {% endfor %}
+                            
+                                        </select>
+                                      </div>
+                            
+                                      <div class="col-5">
+                                        <label for="litros" class="form-label">Litros</label>
+                                        <input
+                                          type="number"
+                                          class="form-control"
+                                          name="litros"
+                                          id="litros"
+                                          aria-describedby="helpLitros"
+                                          value="{{ registro.litros_producidos}}"
+                                        />
+                                        <small id="helpLitros" class="form-text text-muted"
+                                          >Digite cantidad litros</small
+                                        >
+                                      </div>
+                                    </div>
+                            
+                                    <div class="row">
+                                      <div class="col-5">
+                                        <label for="Fecha" class="form-label">Fecha</label>
+                                        <input
+                                          type="date"
+                                          class="form-control"
+                                          name="Fecha"
+                                          id="Fecha"
+                                          aria-describedby="helpFecha"
+                                          value="{{registro.fecha_produccion|date:"Y-m-d"}}"
+                                        />
+                                      </div>
+                                      <div class="col-5">
+                                        <label for="hora" class="form-label">Hora</label>
+                                        <input
+                                          type="time"
+                                          class="form-control"
+                                          name="hora"
+                                          id="hora"
+                                          aria-describedby="helpHora"
+                                          placeholder="12:34"
+                                          value="{{registro.hora_registro}}"
+                                        />
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-auto">
+                                        <label for="turno" class="form-label">Turno</label>
+                                        <select class="form-select form-select-sm" name="turno" id="turno">
+                                          <option>Selecciona uno</option>
+                                          <option value="AM" {% if registro.turno == "AM" %}selected{% endif %} >Mañana</option>
+                                          <option value="PM" {% if registro.turno == "PM" %}selected{% endif %}>Tarde</option>
+                                          <option value="MM" {% if registro.turno == "MM" %}selected{% endif %}>Noche</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <br />
+                                    <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Enviar</button>
+                                    <div/>
+                                    <br>
+                                  </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                 </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

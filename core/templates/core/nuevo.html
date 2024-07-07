@@ -1,0 +1,109 @@
+{% extends "core/base.html" %}
+
+{% block nombre %}{% endblock nombre %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <h2>Nuevo Registro</h2>
+    <form action="" method="post">
+        <div class="mb-3">
+            <label for="operador" class="col-sm-2 col-form-label">Operador</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="operador" value="nombreoperador">
+            </div>
+        </div>
+        <div class="row">
+
+            
+            <div class="col-auto">
+            <label for="combustible" class="form-label">Combustible</label>
+            <select
+                class="form-select form-select-sm"
+                name="combustible"
+                id="combustible"
+            >
+            <option selected>Selecciona uno</option>
+            <option value="G93">Gasolina 93 Octanos</option>
+            <option value="G95">Gasolina 95 Octanos</option>
+            <option value="G97">Gasolina 97 Octanos</option>
+            <option value="DIE">Diesel convencional</option>
+            <option value="DIP">Diesel de alto rendimiento</option>
+            <option value="JA1">Jet A-1</option>
+            <option value="AVG">Av Gas</option>
+        
+            </select>
+        </div>
+        
+
+        <div class="col-auto">
+        <label for="litros" class="form-label">Litros</label>
+        <input
+            type="number"
+            class="form-control"
+            name="litros"
+            id="litros"
+            aria-describedby="helpLitros"
+            placeholder="1"
+            />
+            <small id="helpLitros" class="form-text text-muted">Digite cantidad litros</small>
+        </div>
+    </div>
+        
+        <div class="row">
+
+            <div class="col-auto">
+                <label for="Fecha" class="form-label">Fecha</label>
+                <input
+                type="date"
+                class="form-control"
+                name="Fecha"
+                id="Fecha"
+                aria-describedby="helpFecha"
+                placeholder="DD/MM/AAAA"
+                />
+                <small id="helpFecha" class="form-text text-muted">Fecha actual</small>
+            </div>
+            <div class="col-auto">
+                <label for="hora" class="form-label">Hora</label>
+                <input
+                type="time"
+                class="form-control"
+                name="hora"
+                id="hora"
+                aria-describedby="helpHora"
+                placeholder="12:34"
+                />
+                <small id="helpHora" class="form-text text-muted">Hora actual</small>
+            </div>
+        </div>
+    <div class="row">
+
+        <div class="col-auto">
+            <label for="turno" class="form-label">Turno</label>
+            <select
+            class="form-select form-select-sm"
+            name="turno"
+            id="turno"
+            >
+            <option selected>Selecciona uno</option>
+            <option value="AM">Mañana</option>
+            <option value="PM">Tarde</option>
+            <option value="MM">Noche</option>
+        </select>
+    </div>
+    </div>
+    <br>
+    <button
+    type="submit"
+    class="btn btn-primary"
+    >
+    Enviar
+</button>
+
+
+
+</form>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENC - Acceso </title>
+
+    <link rel="stylesheet" href="{% static "core/css/bootstrap.css" %}">
+    <script src="{% static "core/js/bootstrap.min.js" %}"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+        <br><br><br></br></br></br>
+            
+            <div class="card">
+
+            <div class="card-header">
+                ENC - inicio de sesion
+            </div>
+            <div class="card-body">
+
+                <form method="POST">
+                {% csrf_token %}
+                <div class = "form-group">
+                <label>Usuario</label>
+                <input class="form-control" name="usuario" placeholder="Escribe usuario">
+                </div>
+                <br>
+                <div class="form-group">
+                
+                <label>Contraseña:</label>
+                <input type="password" class="form-control" name="contraseña" placeholder="Escribe contraseña">
+                </div>
+                <br>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" value="log" name="accion">Entrar</button>
+                </div>
+                </form>
+            </div>
+            
+        </div>
+        </div>
+        
+    </div>
+    </div>
+
+
+</body>
+</html>
