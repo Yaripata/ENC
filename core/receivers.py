@@ -46,4 +46,4 @@ def guardar_eliminacion(sender, instance,**kwargs):
 
     totales = RegistroProduccion.objects.filter(codigo_combustible=instance.codigo_combustible).aggregate(Sum('litros_producidos'))
     RegistroAcciones.objects.create(usuario=usuario.username,accion="ELI",registro=instance.id)
-    response = client.chat_postMessage(channel='#producttracker', text=f"{ instance.fecha_produccion } { instance.hora_registro } { instance.codigo_combustible.zona_produccion.codigo_planta } - Eliminacion de Registro de Produccion - { instance.codigo_combustible.codigo_combustible } {instance.litros_producidos} litros | Total Almacenado { totales['suma'] }")
+    response = client.chat_postMessage(channel='#producttracker', text=f"{ instance.fecha_produccion } { instance.hora_registro } { instance.codigo_combustible.zona_produccion.codigo_planta } - Eliminacion de Registro de Produccion - { instance.codigo_combustible.codigo_combustible } {instance.litros_producidos} litros")
